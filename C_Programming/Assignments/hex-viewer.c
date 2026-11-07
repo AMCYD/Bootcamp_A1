@@ -1,4 +1,7 @@
-
+/*
+* Project: A Hexa Viewer in C language
+* Author:  AMER
+*/
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
