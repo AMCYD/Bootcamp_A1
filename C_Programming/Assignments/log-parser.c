@@ -16,6 +16,7 @@ const char *Suspicious_Terms[] = {
     "failed login",
     "unauthorized",
     "token changed",
+    "hook",
     "mimikatz",
     "powershell.exe -enc",
     "access denied",
