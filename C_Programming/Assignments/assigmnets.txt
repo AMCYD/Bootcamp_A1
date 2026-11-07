@@ -1,1 +1,2 @@
-assigmnets
+1. Log file Parser
+2. Hex Viewer
