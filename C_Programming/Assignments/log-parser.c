@@ -1,4 +1,8 @@
-/* Copyright (c) 2026 Amer Aboabdl — A log file parser in C language. */
+/* 
+* Copyright (c) 2026 
+* Project: A log file parser in C language. 
+* Author:  AMER
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
