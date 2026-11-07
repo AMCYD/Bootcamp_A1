@@ -1,3 +1,8 @@
+/* 
+* Copyright (c) 2026 
+* Project: A Password Strength Checker in C language. 
+* Author:  AMER
+*/
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
