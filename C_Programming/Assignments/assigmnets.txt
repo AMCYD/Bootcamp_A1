@@ -1,2 +1,3 @@
-1. Log file Parser
-2. Hex Viewer
+1. Password Strength Checker
+2. Log file Parser
+3. Hex Viewer
