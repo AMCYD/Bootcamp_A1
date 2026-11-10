@@ -30,7 +30,7 @@ static const FileSignature KNOWN_SIGNATURES[] = {
 };
 
 void inspect_magic( char *filename) {
-    FILE *fp = fopen(filename, "rb");    // open file read binary mode
+    FILE *fp = fopen(filename, "rb");    // open file and read binary mode
     if (!fp) {
         perror("Error opening file");
         return;
@@ -56,7 +56,7 @@ void inspect_magic( char *filename) {
     printf("\n");
 
     // 2. ASCII 
-    printf("ASCII: ");
+    printf("ASCII:");
     for (size_t i = 0; i < bytes_read; i++) {
         printf(" %c ", isprint(header[i]) ? header[i] : '.');
     }
