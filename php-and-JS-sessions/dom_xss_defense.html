@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 14: DOM Interaction &amp; DOM-XSS Prevention</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 780px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f4f6f9;
+            color: #333;
+        }
+        .card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        h2, h3 {
+            margin-top: 0;
+            color: #1a365d;
+        }
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px 0 15px 0;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #fff;
+        }
+        .btn-unsafe { background: #dc3545; }
+        .btn-unsafe:hover { background: #b02a37; }
+        .btn-safe { background: #28a745; }
+        .btn-safe:hover { background: #218838; }
+        .btn-sample { background: #4a5568; }
+        .btn-sample:hover { background: #2d3748; }
+        .output-box {
+            margin-top: 15px;
+            padding: 16px;
+            border-radius: 5px;
+            min-height: 50px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+            word-break: break-word;
+        }
+        .badge-unsafe {
+            background: #dc3545;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .badge-safe {
+            background: #28a745;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .log-entry {
+            padding: 8px 10px;
+            margin-top: 8px;
+            background: #e9f7ef;
+            border-left: 4px solid #28a745;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>DOM Interaction &amp; DOM-Based XSS Prevention Lab</h2>
+    <p>Enter text or a test XSS payload below, then compare how <code>innerHTML</code> vs. <code>textContent</code> handles the input in the DOM.</p>
+
+    <label for="userInput"><strong>User Input:</strong></label>
+    <input type="text" id="userInput" placeholder="Try: <img src=x onerror=alert(1)>">
+
+    <div class="btn-group">
+        <button type="button" class="btn-unsafe" id="unsafeBtn">Unsafe Render (innerHTML)</button>
+        <button type="button" class="btn-safe" id="safeBtn">Safe Render (textContent)</button>
+        <button type="button" class="btn-sample" id="fillPayloadBtn">Insert Test Payload</button>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Rendered DOM Output</h3>
+    <p id="modeIndicator"><strong>Current Mode:</strong> Waiting for input...</p>
+    <div id="outputContainer" class="output-box">Output will appear here...</div>
+</div>
+
+<script>
+    // Capture references to DOM elements safely
+    const inputField = document.getElementById("userInput");
+    const outputContainer = document.getElementById("outputContainer");
+    const modeIndicator = document.getElementById("modeIndicator");
+
+    // Helper button to populate the exact XSS payload from the assignment
+    document.getElementById("fillPayloadBtn").addEventListener("click", function () {
+        inputField.value = "<img src=x onerror=alert(1)>";
+    });
+
+    // Step 3: INSECURE Rendering using innerHTML (Vulnerable to DOM-XSS)
+    document.getElementById("unsafeBtn").addEventListener("click", function () {
+        // Step 2: Capture input value via document.getElementById().value
+        const rawInput = document.getElementById("userInput").value;
+
+        modeIndicator.innerHTML = '<strong>Current Mode:</strong> <span class="badge-unsafe">UNSAFE (innerHTML)</span> — HTML tags &amp; event handlers are parsed and executed!';
+
+        // VULNERABILITY: Direct assignment to innerHTML allows arbitrary script execution
+        outputContainer.innerHTML = rawInput;
+    });
+
+    // Step 4: SECURE Rendering using textContent + createElement() & appendChild()
+    document.getElementById("safeBtn").addEventListener("click", function () {
+        // Step 2: Capture input value via document.getElementById().value
+        const rawInput = document.getElementById("userInput").value;
+
+        // Clear previous output safely
+        outputContainer.textContent = "";
+
+        // Build status badge safely using DOM creation methods
+        modeIndicator.textContent = "Current Mode: ";
+        const safeBadge = document.createElement("span");
+        safeBadge.className = "badge-safe";
+        safeBadge.textContent = "SAFE (textContent + createElement)";
+        modeIndicator.appendChild(safeBadge);
+
+        // Build structural wrapper element safely via createElement() and appendChild()
+        const safeWrapper = document.createElement("div");
+        safeWrapper.className = "log-entry";
+
+        // DEFENSE: Assign untrusted input strictly to textContent so it renders as literal text
+        safeWrapper.textContent = rawInput;
+        outputContainer.appendChild(safeWrapper);
+    });
+</script>
+
+</body>
+</html>
