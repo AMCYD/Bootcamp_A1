@@ -20,7 +20,7 @@ try {
         INSERT INTO users (username, email, role) VALUES
         ('admin', 'admin@security-lab.local', 'Administrator'),
         ('ahmed', 'ahmed@security-lab.local', 'SOC Analyst'),
-        ('sara', 'sara@security-lab.local', 'Incident Responder');
+        ('amer', 'amer@security-lab.local', 'Incident Responder');
     ");
 } catch (PDOException $e) {
     die("Database initialization failed.");
